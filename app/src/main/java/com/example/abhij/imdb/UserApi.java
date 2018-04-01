@@ -12,7 +12,7 @@ import retrofit2.http.GET;
 public interface UserApi {
 
 
-    @GET("movie/popular?api_key=815982ecec1c306def1a2852911c727c")
+    @GET("movie/popular?api_key=815982ecec1c306def1a2852911c727c")  //@GET('/')
     public Call<PopularMovies> getPopularMovies();
 
 

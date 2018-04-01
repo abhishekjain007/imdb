@@ -16,7 +16,7 @@ public class OpenHelper  {
     {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(" http://api.themoviedb.org/3/")
+                .baseUrl(" http://api.themoviedb.org/3/") //http://localhost:3000
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         userApi = retrofit.create(UserApi.class);

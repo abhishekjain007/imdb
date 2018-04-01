@@ -44,7 +44,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     @Override
     public void onBindViewHolder(final UserHolder holder, final int position) {
 
-        String url ="http://image.tmdb.org/t/p/w342/"+ movies.get(position).getPoster_path();
+        String url ="http://image.tmdb.org/t/p/original/"+ movies.get(position).getBackdrop_path();
         Picasso.get().load(url).into(holder.poster);
         holder.title.setText(movies.get(position).getTitle());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
