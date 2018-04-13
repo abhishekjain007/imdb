@@ -1,6 +1,6 @@
 package com.example.abhij.imdb;
 
-import java.util.ArrayList;
+import com.example.abhij.imdb.MovieClasses.DifferentMovies;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,7 +13,7 @@ public interface UserApi {
 
 
     @GET("movie/popular?api_key=815982ecec1c306def1a2852911c727c")  //@GET('/')
-    public Call<PopularMovies> getPopularMovies();
+    public Call<DifferentMovies> getPopularMovies();
 
 
 }

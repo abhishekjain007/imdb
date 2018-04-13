@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapter.UserHolder> {
 
-    interface OnItemClicked{
+    public interface OnItemClicked{
         public void onClick(int position);
     }
     ArrayList<Movie> movies ;

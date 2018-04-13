@@ -17,6 +17,7 @@ public class Movie {
     @PrimaryKey
     private int id;
 
+
     private int imdb_id;
     private String title;
     private Boolean video;

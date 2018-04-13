@@ -2,12 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.abhij.imdb.BroadList_Fragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.abhij.imdb.Fragments.BroadList_Fragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerList_Movies"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </FrameLayout>
