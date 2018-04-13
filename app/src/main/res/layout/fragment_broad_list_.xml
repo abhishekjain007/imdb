@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.abhij.imdb.Fragments.BroadList_Fragment">
+    tools:context="com.example.abhij.imdb.Fragments.LargeList_Fragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerList_Movies"
+        android:id="@+id/recyclerList_Movies_In_Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

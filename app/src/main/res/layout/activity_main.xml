@@ -13,7 +13,7 @@
         android:visibility="visible" />
 
     <FrameLayout
-        android:id="@+id/container_latestMovie"
+        android:id="@+id/container_popularMovie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

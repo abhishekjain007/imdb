@@ -6,11 +6,12 @@ package com.example.abhij.imdb;
 
 public class Constants {
 
-    public static final String Latest = "latest";
-    public static final String PopularMovie="popluar";
-    public static final String NowPlaying = "nowPlaying";
-    public static final String TopRated = "topRated";
-    public static final String Upcoming = "upcoming";
+
+    public static final int Popular=1;
+    public static final int Latest = 2;
+    public static final int TopRated = 3;
+    public static final int NowPlaying = 4;
+    public static final int Upcoming = 5;
 
 }
 

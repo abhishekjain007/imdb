@@ -4,8 +4,10 @@ import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,26 +20,33 @@ import android.view.MenuItem;
 
 import com.example.abhij.imdb.Database.MovieDatabase;
 import com.example.abhij.imdb.Database.UserDAO;
+import com.example.abhij.imdb.Fragments.LargeList_Fragment;
+import com.example.abhij.imdb.Fragments.SmallList_Fragment;
 import com.example.abhij.imdb.Movie;
-import com.example.abhij.imdb.MovieClasses.DifferentMovies;
-import com.example.abhij.imdb.OpenHelper;
+import com.example.abhij.imdb.MovieFetching_AsynTask;
 import com.example.abhij.imdb.R;
-import com.example.abhij.imdb.UserApi;
-import com.example.abhij.imdb.UserRecyclerAdapter;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class MainActivity2 extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,SmallList_Fragment.OnClickListener
+        ,LargeList_Fragment.OnClickListener{
 
-    OpenHelper openHelper;
-    ArrayList<Movie> movies_list;
-    RecyclerView recyclerView_list;
-    UserRecyclerAdapter adapter ;
+
+    ArrayList<Movie> movies_popular;
+    ArrayList<Movie> movies_topRated;
+    ArrayList<Movie> movies_nowPlaying;
+    ArrayList<Movie> movies_upcoming;
+
+
+    Bundle bundle;
+
+
+    LargeList_Fragment fragment_popular;
+    SmallList_Fragment fragment_topRated;
+    LargeList_Fragment fragment_nowPlaying;
+    SmallList_Fragment fragment_upcoming;
+
     MovieDatabase database ;
     UserDAO userDAO;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -51,49 +60,113 @@ public class MainActivity2 extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        openHelper = OpenHelper.getInstance();
-        UserApi userApi = openHelper.getUserApi();
-        movies_list=new ArrayList<>();
-
-        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_Movies);
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe);
-
-        database= Room.databaseBuilder(this,MovieDatabase.class,"movieDatabase")
-                .allowMainThreadQueries()
-                .build();
-
-        userDAO = database.getuserDAO();
+        fragment_popular = new LargeList_Fragment() ;
+        fragment_topRated= new SmallList_Fragment();
+        fragment_nowPlaying = new LargeList_Fragment() ;
+        fragment_upcoming = new SmallList_Fragment();
+        bundle = new Bundle();
 
 
 
-        ArrayList<Movie> movieArrayList = (ArrayList<Movie>) userDAO.getAllMoives();
 
-        movies_list.clear();
-        movies_list.addAll(movieArrayList);
-        adapter.notifyDataSetChanged();
-
-        swipeRefreshLayout.setRefreshing(true);
-        Call<DifferentMovies> call = userApi.getPopularMovies();
-        call.enqueue(new Callback<DifferentMovies>() {
+        MovieFetching_AsynTask popular = new MovieFetching_AsynTask(1,new MovieFetching_AsynTask.MovieDownloadListener() {
             @Override
-            public void onResponse(Call<DifferentMovies> call, Response<DifferentMovies> response) {
+            public void OnDownloadComplete(ArrayList<Movie> movies) {
 
 
-                DifferentMovies differentMovies = response.body();
-                movies_list.clear();
-                movies_list.addAll(differentMovies.getResults());
-                adapter.notifyDataSetChanged();
+                    movies_popular = movies;
+                    Log.d("got","yes");
+                    bundle.putSerializable("movies",movies_popular);
+                    fragment_popular.setArguments(bundle);
 
-                swipeRefreshLayout.setRefreshing(true);
-                userDAO.insertMovies(movies_list);
 
-            }
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
 
-            @Override
-            public void onFailure(Call<DifferentMovies> call, Throwable t) {
+                transaction.replace(R.id.container_popularMovies,fragment_popular).commit();
+                }
 
-            }
         });
+
+        popular.execute();
+
+        MovieFetching_AsynTask topRated = new MovieFetching_AsynTask(3,new MovieFetching_AsynTask.MovieDownloadListener() {
+            @Override
+            public void OnDownloadComplete(ArrayList<Movie> movies) {
+
+                if (movies != null) {
+                    movies_topRated = movies;
+                    bundle.putSerializable("movies",movies);
+                    fragment_topRated.setArguments(bundle);
+
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+
+                    transaction.replace(R.id.container_topRatedMovies,fragment_topRated).commit();
+                }
+            }
+
+        });
+        topRated.execute();
+        MovieFetching_AsynTask nowPlaying = new MovieFetching_AsynTask(4,new MovieFetching_AsynTask.MovieDownloadListener() {
+            @Override
+            public void OnDownloadComplete(ArrayList<Movie> movies) {
+
+                if (movies != null) {
+                    movies_nowPlaying = movies;
+                    bundle.putSerializable("movies",movies);
+                    fragment_nowPlaying.setArguments(bundle);
+
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+
+                    transaction.replace(R.id.container_nowPlayingMovies,fragment_nowPlaying).commit();
+                }
+            }
+
+        });
+        nowPlaying.execute();
+
+
+
+        MovieFetching_AsynTask upcoming = new MovieFetching_AsynTask(5,new MovieFetching_AsynTask.MovieDownloadListener() {
+            @Override
+            public void OnDownloadComplete(ArrayList<Movie> movies) {
+
+                if (movies != null) {
+                    movies_upcoming = movies;
+                    bundle.putSerializable("movies",movies);
+                    fragment_upcoming.setArguments(bundle);
+
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+
+                    transaction.replace(R.id.container_upcomingMovies,fragment_upcoming).commit();
+                }
+            }
+
+        });
+
+        upcoming.execute();
+
+//        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_Movies_In_Large);
+//        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe);
+//
+//        database= Room.databaseBuilder(this,MovieDatabase.class,"movieDatabase")
+//                .allowMainThreadQueries()
+//                .build();
+//
+//        userDAO = database.getuserDAO();
+//
+//
+//
+//        ArrayList<Movie> movieArrayList = (ArrayList<Movie>) userDAO.getAllMoives();
+//
+//        movies_list.clear();
+//        movies_list.addAll(movieArrayList);
+//        adapter.notifyDataSetChanged();
+
+//        swipeRefreshLayout.setRefreshing(true);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -170,5 +243,10 @@ public class MainActivity2 extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(int position) {
+
     }
 }

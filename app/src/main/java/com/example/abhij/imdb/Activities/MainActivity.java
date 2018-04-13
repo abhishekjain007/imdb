@@ -10,10 +10,10 @@ import com.example.abhij.imdb.Database.MovieDatabase;
 import com.example.abhij.imdb.Database.UserDAO;
 import com.example.abhij.imdb.Movie;
 import com.example.abhij.imdb.MovieClasses.DifferentMovies;
-import com.example.abhij.imdb.OpenHelper;
+import com.example.abhij.imdb.MyApi;
 import com.example.abhij.imdb.R;
 import com.example.abhij.imdb.UserApi;
-import com.example.abhij.imdb.UserRecyclerAdapter;
+import com.example.abhij.imdb.UserRecyclerAdapter_Large;
 
 import java.util.ArrayList;
 
@@ -23,10 +23,10 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    OpenHelper openHelper;
+    MyApi myApi;
     ArrayList<Movie> movies_list;
     RecyclerView recyclerView_list;
-    UserRecyclerAdapter adapter ;
+    UserRecyclerAdapter_Large adapter ;
     MovieDatabase database ;
     UserDAO userDAO;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        openHelper = OpenHelper.getInstance();
-        UserApi userApi = openHelper.getUserApi();
+        myApi = MyApi.getInstance();
+        UserApi userApi = myApi.getUserApi();
         movies_list=new ArrayList<>();
-        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_Movies);
+        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_Movies_In_Large);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe);
 
         database= Room.databaseBuilder(this,MovieDatabase.class,"movieDatabase")
