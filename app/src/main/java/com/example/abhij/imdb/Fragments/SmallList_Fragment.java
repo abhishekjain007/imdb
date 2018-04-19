@@ -11,10 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.abhij.imdb.Movie;
+import com.example.abhij.imdb.MovieClasses.Movie;
 import com.example.abhij.imdb.R;
-import com.example.abhij.imdb.UserRecyclerAdapter_Large;
-import com.example.abhij.imdb.UserRecyclerAdapter_Small;
+import com.example.abhij.imdb.Adapters.UserRecyclerAdapter_Small;
 
 import java.util.ArrayList;
 
@@ -25,16 +24,17 @@ public class SmallList_Fragment extends Fragment {
 
     public interface OnClickListener{
 
-        public void onClick(int position);
+        public void onClick(int position,Object object);
     }
 
     SmallList_Fragment.OnClickListener listener;
 
 
+    ArrayList<Movie> movieArrayList;
 
     RecyclerView recyclerView_list;
     UserRecyclerAdapter_Small adapter ;
-    ArrayList<Movie> movies_list;
+    String code;
 
     public SmallList_Fragment() {
         // Required empty public constructor
@@ -49,18 +49,22 @@ public class SmallList_Fragment extends Fragment {
 
 
         Bundle bundle = getArguments();
-        movies_list= (ArrayList<Movie>) bundle.getSerializable("movies");
+        code=bundle.getString("code");
 
-        recyclerView_list = (RecyclerView)view.findViewById(R.id.recyclerList_Movies_In_Small);
+        if(code.equals("movie")) {
+            movieArrayList = (ArrayList<Movie>) bundle.getSerializable("moviesList");
 
-        adapter = new UserRecyclerAdapter_Small(getActivity(), movies_list, new UserRecyclerAdapter_Small.OnItemClicked() {
-            @Override
-            public void OnClick(int position) {
+            adapter = new UserRecyclerAdapter_Small(getActivity(), movieArrayList, "movie", new UserRecyclerAdapter_Small.OnItemClicked() {
+                @Override
+                public void OnClick(int position, Object object) {
 
-                listener.onClick(position);
+                    listener.onClick(position, object);
 
-            }
-        });
+                }
+            });
+        }
+
+        recyclerView_list = (RecyclerView) view.findViewById(R.id.recyclerList_Movies_In_Small);
 
         recyclerView_list.setItemAnimator(new DefaultItemAnimator());
         recyclerView_list.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));

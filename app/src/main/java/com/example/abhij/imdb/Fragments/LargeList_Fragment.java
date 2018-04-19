@@ -11,9 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.abhij.imdb.Movie;
+import com.example.abhij.imdb.MovieClasses.Movie;
+import com.example.abhij.imdb.MovieClasses.Trailer;
 import com.example.abhij.imdb.R;
-import com.example.abhij.imdb.UserRecyclerAdapter_Large;
+import com.example.abhij.imdb.Adapters.UserRecyclerAdapter_Large;
 
 import java.util.ArrayList;
 
@@ -25,14 +26,17 @@ public class LargeList_Fragment extends Fragment {
 
     public interface OnClickListener{
 
-        public void onClick(int position);
+        public void onClick(int position,Object object);
     }
 
     OnClickListener listener;
 
+
     RecyclerView recyclerView_list;
     UserRecyclerAdapter_Large adapter ;
-    ArrayList<Movie> movies_list;
+    ArrayList<Movie> movieArrayList;
+    ArrayList<Trailer> trailerArrayList;
+    String code;
 
     public LargeList_Fragment() {
         // Required empty public constructor
@@ -51,18 +55,40 @@ public class LargeList_Fragment extends Fragment {
 
 
         Bundle bundle = getArguments();
-        movies_list= (ArrayList<Movie>) bundle.getSerializable("movies");
 
-        recyclerView_list = (RecyclerView)view.findViewById(R.id.recyclerList_Movies_In_Large);
+        code= bundle.getString("code");
+
+        if(code.equals("movie"))
+        {
+            movieArrayList= (ArrayList<Movie>) bundle.getSerializable("moviesList");
+
+            adapter = new UserRecyclerAdapter_Large(getActivity(), movieArrayList,"movie", new UserRecyclerAdapter_Large.OnItemClicked() {
+                @Override
+                public void onClick(int position,Object object) {
+
+                    listener.onClick(position,object);
+                }
+            });
+
+        }
+
+        if(code.equals("trailer"))
+        {
+            trailerArrayList= (ArrayList<Trailer>) bundle.getSerializable("trailerList");
+
+            adapter = new UserRecyclerAdapter_Large( trailerArrayList,getActivity(),"trailer", new UserRecyclerAdapter_Large.OnItemClicked() {
+                @Override
+                public void onClick(int position,Object object) {
+
+                    listener.onClick(position,object);
+                }
+            });
+
+        }
+
+        recyclerView_list = (RecyclerView)view.findViewById(R.id.recyclerList_In_Large);
 
 
-        adapter = new UserRecyclerAdapter_Large(getActivity(), movies_list, new UserRecyclerAdapter_Large.OnItemClicked() {
-            @Override
-            public void onClick(int position) {
-
-                listener.onClick(position);
-            }
-        });
 
         recyclerView_list.setItemAnimator(new DefaultItemAnimator());
         recyclerView_list.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));

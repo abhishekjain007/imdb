@@ -1,4 +1,4 @@
-package com.example.abhij.imdb;
+package com.example.abhij.imdb.MovieClasses;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by abhij on 25-03-2018.
@@ -30,6 +29,7 @@ public class Movie implements Serializable{
     private String overview;
 
 
+
     @Ignore
     private ArrayList<genres> genres;
 
@@ -40,7 +40,7 @@ public class Movie implements Serializable{
         String name;
     }
 
-    public Movie(int id, int imdb_id, String title, Boolean video, String original_title, String poster_path, String backdrop_path, String original_language, String release_date, String overview, ArrayList<Movie.genres> genres) {
+    public Movie(int imdb_id, String title, Boolean video, String original_title, String poster_path, String backdrop_path, String original_language, String release_date, String overview, ArrayList<Movie.genres> genres) {
         this.id = id;
         this.imdb_id = imdb_id;
         this.title = title;

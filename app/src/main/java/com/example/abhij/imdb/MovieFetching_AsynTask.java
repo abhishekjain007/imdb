@@ -3,12 +3,12 @@ package com.example.abhij.imdb;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.example.abhij.imdb.MovieClasses.DifferentMovies;
+import com.example.abhij.imdb.MovieClasses.Movie;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**

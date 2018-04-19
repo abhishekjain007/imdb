@@ -8,12 +8,12 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.abhij.imdb.Database.MovieDatabase;
 import com.example.abhij.imdb.Database.UserDAO;
-import com.example.abhij.imdb.Movie;
+import com.example.abhij.imdb.MovieClasses.Movie;
 import com.example.abhij.imdb.MovieClasses.DifferentMovies;
 import com.example.abhij.imdb.MyApi;
 import com.example.abhij.imdb.R;
 import com.example.abhij.imdb.UserApi;
-import com.example.abhij.imdb.UserRecyclerAdapter_Large;
+import com.example.abhij.imdb.Adapters.UserRecyclerAdapter_Large;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         myApi = MyApi.getInstance();
         UserApi userApi = myApi.getUserApi();
         movies_list=new ArrayList<>();
-        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_Movies_In_Large);
+        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_In_Large);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe);
 
         database= Room.databaseBuilder(this,MovieDatabase.class,"movieDatabase")

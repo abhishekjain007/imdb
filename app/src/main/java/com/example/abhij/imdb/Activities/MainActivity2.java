@@ -1,6 +1,6 @@
 package com.example.abhij.imdb.Activities;
 
-import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,16 +17,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.abhij.imdb.Database.MovieDatabase;
 import com.example.abhij.imdb.Database.UserDAO;
 import com.example.abhij.imdb.Fragments.LargeList_Fragment;
 import com.example.abhij.imdb.Fragments.SmallList_Fragment;
-import com.example.abhij.imdb.Movie;
-import com.example.abhij.imdb.MovieFetching_AsynTask;
+import com.example.abhij.imdb.MovieClasses.Movie;
+import com.example.abhij.imdb.MovieClasses.DifferentMovies;
+import com.example.abhij.imdb.MovieDetail;
+import com.example.abhij.imdb.MyApi;
 import com.example.abhij.imdb.R;
+import com.example.abhij.imdb.UserApi;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity2 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,SmallList_Fragment.OnClickListener
@@ -51,6 +59,11 @@ public class MainActivity2 extends AppCompatActivity
     UserDAO userDAO;
     SwipeRefreshLayout swipeRefreshLayout;
 
+    MyApi myApi;
+    UserApi userApi;
+    int option ;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,89 +80,20 @@ public class MainActivity2 extends AppCompatActivity
         bundle = new Bundle();
 
 
+        myApi = MyApi.getInstance();
+        userApi = myApi.getUserApi();
+
+        Log.d("background",option+"");
 
 
-        MovieFetching_AsynTask popular = new MovieFetching_AsynTask(1,new MovieFetching_AsynTask.MovieDownloadListener() {
-            @Override
-            public void OnDownloadComplete(ArrayList<Movie> movies) {
-
-
-                    movies_popular = movies;
-                    Log.d("got","yes");
-                    bundle.putSerializable("movies",movies_popular);
-                    fragment_popular.setArguments(bundle);
-
-
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-
-                transaction.replace(R.id.container_popularMovies,fragment_popular).commit();
-                }
-
-        });
-
-        popular.execute();
-
-        MovieFetching_AsynTask topRated = new MovieFetching_AsynTask(3,new MovieFetching_AsynTask.MovieDownloadListener() {
-            @Override
-            public void OnDownloadComplete(ArrayList<Movie> movies) {
-
-                if (movies != null) {
-                    movies_topRated = movies;
-                    bundle.putSerializable("movies",movies);
-                    fragment_topRated.setArguments(bundle);
-
-                    FragmentManager manager = getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-
-                    transaction.replace(R.id.container_topRatedMovies,fragment_topRated).commit();
-                }
-            }
-
-        });
-        topRated.execute();
-        MovieFetching_AsynTask nowPlaying = new MovieFetching_AsynTask(4,new MovieFetching_AsynTask.MovieDownloadListener() {
-            @Override
-            public void OnDownloadComplete(ArrayList<Movie> movies) {
-
-                if (movies != null) {
-                    movies_nowPlaying = movies;
-                    bundle.putSerializable("movies",movies);
-                    fragment_nowPlaying.setArguments(bundle);
-
-                    FragmentManager manager = getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-
-                    transaction.replace(R.id.container_nowPlayingMovies,fragment_nowPlaying).commit();
-                }
-            }
-
-        });
-        nowPlaying.execute();
+        fetchPopularMovies();
+        fetchTopRatedMovies();
+        fetchNowPlayingMovies();
+        fetchUpcomingMovies();
 
 
 
-        MovieFetching_AsynTask upcoming = new MovieFetching_AsynTask(5,new MovieFetching_AsynTask.MovieDownloadListener() {
-            @Override
-            public void OnDownloadComplete(ArrayList<Movie> movies) {
-
-                if (movies != null) {
-                    movies_upcoming = movies;
-                    bundle.putSerializable("movies",movies);
-                    fragment_upcoming.setArguments(bundle);
-
-                    FragmentManager manager = getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-
-                    transaction.replace(R.id.container_upcomingMovies,fragment_upcoming).commit();
-                }
-            }
-
-        });
-
-        upcoming.execute();
-
-//        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_Movies_In_Large);
+//        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_In_Large);
 //        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe);
 //
 //        database= Room.databaseBuilder(this,MovieDatabase.class,"movieDatabase")
@@ -187,6 +131,130 @@ public class MainActivity2 extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
+
+     private void fetchPopularMovies() {
+        Call<DifferentMovies> call= userApi.getPopularMovies();
+        call.enqueue(new Callback<DifferentMovies>() {
+            @Override
+            public void onResponse(Call<DifferentMovies> call, Response<DifferentMovies> response) {
+
+
+                DifferentMovies differentMovies = response.body();
+                movies_popular= differentMovies.getResults();
+
+                bundle.putSerializable("moviesList",movies_popular);
+                bundle.putString("code","movie");
+                fragment_popular.setArguments(bundle);
+
+
+
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+
+                transaction.replace(R.id.container_popularMovies,fragment_popular).commit();
+            }
+
+            @Override
+            public void onFailure(Call<DifferentMovies> call, Throwable t) {
+
+
+                Toast.makeText(MainActivity2.this,"Could Not Show Popular ",Toast.LENGTH_SHORT);
+            }
+        });
+
+    }
+
+
+    private void fetchTopRatedMovies() {
+
+        Call<DifferentMovies> call2= userApi.getTopRatedMovies();
+        call2.enqueue(new Callback<DifferentMovies>() {
+            @Override
+            public void onResponse(Call<DifferentMovies> call, Response<DifferentMovies> response) {
+
+                DifferentMovies differentMovies = response.body();
+                movies_topRated= differentMovies.getResults();
+
+                bundle.putSerializable("moviesList",movies_topRated);
+                bundle.putString("code","movie");
+                fragment_topRated.setArguments(bundle);
+
+
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+
+                transaction.replace(R.id.container_topRatedMovies,fragment_topRated).commit();
+            }
+
+            @Override
+            public void onFailure(Call<DifferentMovies> call, Throwable t) {
+
+
+                Toast.makeText(MainActivity2.this,"Could Not Show top Rated",Toast.LENGTH_SHORT);
+            }
+        });
+
+    }
+
+
+    private void fetchNowPlayingMovies() {
+        Call<DifferentMovies> call3= userApi.getNowPlayingMovies();
+        call3.enqueue(new Callback<DifferentMovies>() {
+            @Override
+            public void onResponse(Call<DifferentMovies> call, Response<DifferentMovies> response) {
+
+                DifferentMovies differentMovies = response.body();
+                movies_nowPlaying= differentMovies.getResults();
+
+                bundle.putSerializable("moviesList",movies_nowPlaying);
+                bundle.putString("code","movie");
+                fragment_nowPlaying.setArguments(bundle);
+
+
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+
+                transaction.replace(R.id.container_nowPlayingMovies,fragment_nowPlaying).commit();
+            }
+
+            @Override
+            public void onFailure(Call<DifferentMovies> call, Throwable t) {
+
+                Toast.makeText(MainActivity2.this,"Could Not Show Now Playing",Toast.LENGTH_SHORT);
+            }
+        });
+
+    }
+
+    private void fetchUpcomingMovies() {
+        Call<DifferentMovies> call4= userApi.getUpcomingMovies();
+        call4.enqueue(new Callback<DifferentMovies>() {
+            @Override
+            public void onResponse(Call<DifferentMovies> call, Response<DifferentMovies> response) {
+
+                DifferentMovies differentMovies = response.body();
+                movies_upcoming= differentMovies.getResults();
+
+                bundle.putSerializable("moviesList",movies_upcoming);
+                bundle.putString("code","movie");
+                fragment_upcoming.setArguments(bundle);
+
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+
+                transaction.replace(R.id.container_upcomingMovies,fragment_upcoming).commit();
+            }
+
+            @Override
+            public void onFailure(Call<DifferentMovies> call, Throwable t) {
+
+                Toast.makeText(MainActivity2.this,"Could Not Show Upcoming Movies",Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -246,7 +314,14 @@ public class MainActivity2 extends AppCompatActivity
     }
 
     @Override
-    public void onClick(int position) {
-
+    public void onClick(int position,Object object) {
+        Movie movie= (Movie)object;
+        Intent intent =new Intent(this, MovieDetail.class);
+        Bundle bundle =new Bundle();
+        bundle.putString("poster",movie.getPoster_path());
+        bundle.putInt("movie_id",movie.getId());
+        bundle.putString("overView",movie.getOverview());
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

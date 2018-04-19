@@ -24,7 +24,7 @@
 
     <FrameLayout
         android:id="@+id/container_popularMovies"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="192dp"
         android:layout_marginEnd="2dp"
         android:layout_marginStart="2dp"
@@ -35,17 +35,17 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/text_popular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="28dp"
-        android:text="Popular"
-        android:textSize="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="28dp" />
+        <TextView
+            android:id="@+id/text_popular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="28dp"
+            android:text="Popular"
+            android:textColor="@android:color/black"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
@@ -55,15 +55,15 @@
             android:layout_marginStart="28dp"
             android:layout_marginTop="28dp"
             android:text="Top Rated"
+            android:textColor="@android:color/black"
             android:textSize="25dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/container_popularMovies"
-            android:layout_marginLeft="28dp" />
+            app:layout_constraintTop_toBottomOf="@+id/container_popularMovies" />
 
     <FrameLayout
         android:id="@+id/container_topRatedMovies"
         android:layout_width="match_parent"
-        android:layout_height="192dp"
+        android:layout_height="260dp"
         android:layout_marginEnd="2dp"
         android:layout_marginStart="2dp"
         android:layout_marginTop="8dp"
@@ -73,17 +73,17 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/text_nowPlaying"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="28dp"
-        android:text="Now Playing"
-        android:textSize="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_topRatedMovies"
-        android:layout_marginLeft="28dp" />
+        <TextView
+            android:id="@+id/text_nowPlaying"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="28dp"
+            android:text="Now Playing"
+            android:textColor="@android:color/black"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/container_topRatedMovies" />
 
     <FrameLayout
         android:id="@+id/container_nowPlayingMovies"
@@ -98,30 +98,32 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/text_upcoming"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="28dp"
-        android:text="Upcoming"
-        android:textSize="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_nowPlayingMovies"
-        android:layout_marginLeft="28dp" />
+        <TextView
+            android:id="@+id/text_upcoming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="28dp"
+            android:text="Upcoming"
+            android:textColor="@android:color/black"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/container_nowPlayingMovies" />
 
-    <FrameLayout
-        android:id="@+id/container_upcomingMovies"
-        android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_upcoming">
+        <FrameLayout
+            android:id="@+id/container_upcomingMovies"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_upcoming">
 
-    </FrameLayout>
+        </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
