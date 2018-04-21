@@ -7,12 +7,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by abhij on 24-03-2018.
  */
 
-public class OpenHelper  {
+public class MyApi {
 
-    private static  OpenHelper Instance;
+    private static MyApi Instance;
     private UserApi userApi;
 
-    private OpenHelper()
+    private MyApi()
     {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -22,11 +22,11 @@ public class OpenHelper  {
         userApi = retrofit.create(UserApi.class);
     }
 
-    public static OpenHelper getInstance()
+    public static MyApi getInstance()
     {
         if(Instance==null)
         {
-            Instance = new OpenHelper();
+            Instance = new MyApi();
         }
 
         return Instance;

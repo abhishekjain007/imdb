@@ -1,4 +1,4 @@
-package com.example.abhij.imdb;
+package com.example.abhij.imdb.Database;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -6,6 +6,9 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+
+import com.example.abhij.imdb.MovieClasses.Movie;
+import com.example.abhij.imdb.ShowsClasses.Show;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +20,7 @@ import java.util.List;
 @Dao
 public interface UserDAO  {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie movie);
 
 
@@ -31,10 +34,19 @@ public interface UserDAO  {
     void updateMovie(Movie movie);
 
     @Query("SELECT * FROM movies")
-    List<Movie> getAllMoives();
+    List<Movie> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE id = :id")
     Movie getMovie(int id);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertShow(Show show);
+
+    @Query("SELECT * FROM shows")
+    List<Show> getAllShowes();
+
+    @Delete
+    void deleteShow(Show show);
 
 
 }

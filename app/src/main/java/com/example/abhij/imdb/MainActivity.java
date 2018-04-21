@@ -1,101 +1,67 @@
 package com.example.abhij.imdb;
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
-import android.arch.persistence.room.DatabaseConfiguration;
-import android.arch.persistence.room.InvalidationTracker;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    OpenHelper openHelper;
-    ArrayList<Movie> movies_list;
-    RecyclerView recyclerView_list;
-    UserRecyclerAdapter adapter ;
-    MovieDatabase database ;
-    UserDAO userDAO;
-    SwipeRefreshLayout swipeRefreshLayout;
+//
+//    MenuInflater inflater = getMenuInflater();
+//    inflater.
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+            FragmentManager manager = getSupportFragmentManager();
+
+            switch (item.getItemId()) {
+                case R.id.navigation_Movies:
+
+                    Fragment_Movies fragment = new Fragment_Movies();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container_main,fragment).commit();
+
+                    Toast.makeText(MainActivity.this,"movies",Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_TV_shows:
+                    Fragment_Shows fragment1 = new Fragment_Shows();
+                    FragmentTransaction transaction1 = manager.beginTransaction();
+                    transaction1.replace(R.id.container_main,fragment1).commit();
+
+                    Toast.makeText(MainActivity.this,"movies",Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_Favourate:
+                    Fragment_favourite fragment2=new Fragment_favourite();
+
+                    FragmentTransaction transaction2 = manager.beginTransaction();
+                    transaction2.replace(R.id.container_main,fragment2).commit();
+
+                    Toast.makeText(MainActivity.this,"fav",Toast.LENGTH_SHORT).show();
+                    return true;
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        openHelper = OpenHelper.getInstance();
-        UserApi userApi = openHelper.getUserApi();
-        movies_list=new ArrayList<>();
-        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_Movies);
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe);
-
-        database= Room.databaseBuilder(this,MovieDatabase.class,"movieDatabase")
-                .allowMainThreadQueries()
-                .build();
-
-        userDAO = database.getuserDAO();
-
-
-        adapter = new UserRecyclerAdapter(this, movies_list, new UserRecyclerAdapter.OnItemClicked() {
-            @Override
-            public void onClick(int position) {
-
-            }
-        });
-
-        recyclerView_list.setItemAnimator(new DefaultItemAnimator());
-        recyclerView_list.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-//        recyclerView_list.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL));
-        recyclerView_list.setAdapter(adapter);
-
-        ArrayList<Movie> movieArrayList = (ArrayList<Movie>) userDAO.getAllMoives();
-        movies_list.clear();
-        movies_list.addAll(movieArrayList);
-        adapter.notifyDataSetChanged();
-
-        swipeRefreshLayout.setRefreshing(true);
-        Call<PopularMovies> call = userApi.getPopularMovies();
-        call.enqueue(new Callback<PopularMovies>() {
-           @Override
-           public void onResponse(Call<PopularMovies> call, Response<PopularMovies> response) {
-
-
-               PopularMovies popularMovies = response.body();
-               movies_list.clear();
-               movies_list.addAll(popularMovies.getResults());
-               adapter.notifyDataSetChanged();
-
-               swipeRefreshLayout.setRefreshing(true);
-               userDAO.insertMovies(movies_list);
-
-           }
-
-           @Override
-           public void onFailure(Call<PopularMovies> call, Throwable t) {
-
-           }
-       });
-
-
-
-
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
-
-
-
-
-
-
 
 }
