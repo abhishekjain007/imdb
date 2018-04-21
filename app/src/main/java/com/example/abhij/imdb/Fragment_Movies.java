@@ -1,34 +1,26 @@
-package com.example.abhij.imdb.Activities;
+package com.example.abhij.imdb;
 
+
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.abhij.imdb.Activities.MainActivity2;
 import com.example.abhij.imdb.Database.MovieDatabase;
 import com.example.abhij.imdb.Database.UserDAO;
 import com.example.abhij.imdb.Fragments.LargeList_Fragment;
 import com.example.abhij.imdb.Fragments.SmallList_Fragment;
-import com.example.abhij.imdb.MovieClasses.Movie;
 import com.example.abhij.imdb.MovieClasses.DifferentMovies;
-import com.example.abhij.imdb.MovieDetail;
-import com.example.abhij.imdb.MyApi;
-import com.example.abhij.imdb.R;
-import com.example.abhij.imdb.UserApi;
+import com.example.abhij.imdb.MovieClasses.Movie;
 
 import java.util.ArrayList;
 
@@ -36,10 +28,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity2 extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,SmallList_Fragment.OnClickListener
-        ,LargeList_Fragment.OnClickListener{
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class Fragment_Movies extends Fragment{
+
+
+    public Fragment_Movies() {
+
+    }
 
     ArrayList<Movie> movies_popular=new ArrayList<>();
     ArrayList<Movie> movies_topRated=new ArrayList<>();
@@ -48,6 +46,8 @@ public class MainActivity2 extends AppCompatActivity
 
 
     Bundle bundle1,bundle2,bundle3,bundle4;
+
+    FragmentManager manager ;
 
 
 
@@ -61,18 +61,14 @@ public class MainActivity2 extends AppCompatActivity
     SwipeRefreshLayout swipeRefreshLayout;
 
     MyApi myApi;
-    UserApi userApi;
+   public  UserApi userApi;
     int option ;
 
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view=  inflater.inflate(R.layout.fragment_fragment__movies, container, false);
 
         fragment_popular = new LargeList_Fragment() ;
         fragment_topRated= new SmallList_Fragment();
@@ -84,8 +80,15 @@ public class MainActivity2 extends AppCompatActivity
         bundle4 = new Bundle();
 
 
+        manager = getActivity().getSupportFragmentManager();
+
         myApi = MyApi.getInstance();
         userApi = myApi.getUserApi();
+
+        database = Room.databaseBuilder(getActivity().getApplicationContext(),MovieDatabase.class,"movieDatabase")
+                .allowMainThreadQueries()
+                .build();
+        userDAO= database.getuserDAO();
 
         Log.d("background",option+"");
 
@@ -95,50 +98,13 @@ public class MainActivity2 extends AppCompatActivity
         fetchNowPlayingMovies();
         fetchUpcomingMovies();
 
-
-
-//        recyclerView_list = (RecyclerView) findViewById(R.id.recyclerList_In_Large);
-//        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe);
-//
-//        database= Room.databaseBuilder(this,MovieDatabase.class,"movieDatabase")
-//                .allowMainThreadQueries()
-//                .build();
-//
-//        userDAO = database.getuserDAO();
-//
-//
-//
-//        ArrayList<Movie> movieArrayList = (ArrayList<Movie>) userDAO.getAllMoives();
-//
-//        movies_list.clear();
-//        movies_list.addAll(movieArrayList);
-//        adapter.notifyDataSetChanged();
-
-//        swipeRefreshLayout.setRefreshing(true);
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        return view;
     }
 
 
 
-     private void fetchPopularMovies() {
+
+    private void fetchPopularMovies() {
         Call<DifferentMovies> call= userApi.getPopularMovies();
         call.enqueue(new Callback<DifferentMovies>() {
             @Override
@@ -153,19 +119,28 @@ public class MainActivity2 extends AppCompatActivity
                 bundle1.putString("code","movie");
                 fragment_popular.setArguments(bundle1);
 
+                fragment_popular.setUpListener(new LargeList_Fragment.OnClickListener() {
+                    @Override
+                    public void onClick(int position, Object object) {
+                        onClickItem(position,object);
+                    }
+                }, new LargeList_Fragment.OnHeartClicked() {
+                    @Override
+                    public void onHeartClick(int position, Object object) {
+                        OnHeartClick(position,object);
+                    }
+                });
 
-
-                FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
-
                 transaction.replace(R.id.container_popularMovies,fragment_popular).commit();
+
             }
 
             @Override
             public void onFailure(Call<DifferentMovies> call, Throwable t) {
 
 
-                Toast.makeText(MainActivity2.this,"Could Not Show Popular ",Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),"Could Not Show Popular ",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -187,18 +162,28 @@ public class MainActivity2 extends AppCompatActivity
                 bundle2.putString("code","movie");
                 fragment_topRated.setArguments(bundle2);
 
+                fragment_topRated.setUpListener(new SmallList_Fragment.OnClickListener() {
+                    @Override
+                    public void onClick(int position, Object object) {
+                        onClickItem(position, object);
+                    }
+                }, new SmallList_Fragment.OnHeartClicked() {
+                    @Override
+                    public void onHeartClick(int position, Object object) {
+                        OnHeartClick(position,object);
+                    }
+                });
 
-                FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
-
                 transaction.replace(R.id.container_topRatedMovies,fragment_topRated).commit();
+
             }
 
             @Override
             public void onFailure(Call<DifferentMovies> call, Throwable t) {
 
 
-                Toast.makeText(MainActivity2.this,"Could Not Show top Rated",Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),"Could Not Show top Rated",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -219,17 +204,28 @@ public class MainActivity2 extends AppCompatActivity
                 bundle3.putString("code","movie");
                 fragment_nowPlaying.setArguments(bundle3);
 
+                fragment_nowPlaying.setUpListener(new LargeList_Fragment.OnClickListener() {
+                    @Override
+                    public void onClick(int position, Object object) {
+                        onClickItem(position,object);
+                    }
+                }, new LargeList_Fragment.OnHeartClicked() {
+                    @Override
+                    public void onHeartClick(int position, Object object) {
+                        OnHeartClick(position,object);
+                    }
+                });
 
-                FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
-
                 transaction.replace(R.id.container_nowPlayingMovies,fragment_nowPlaying).commit();
+
+
             }
 
             @Override
             public void onFailure(Call<DifferentMovies> call, Throwable t) {
 
-                Toast.makeText(MainActivity2.this,"Could Not Show Now Playing",Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),"Could Not Show Now Playing",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -249,87 +245,53 @@ public class MainActivity2 extends AppCompatActivity
                 bundle4.putString("code","movie");
                 fragment_upcoming.setArguments(bundle4);
 
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
+                fragment_upcoming.setUpListener(new SmallList_Fragment.OnClickListener() {
+                    @Override
+                    public void onClick(int position, Object object) {
+                        onClickItem(position,object);
+                    }
+                }, new SmallList_Fragment.OnHeartClicked() {
+                    @Override
+                    public void onHeartClick(int position, Object object) {
+                        OnHeartClick(position,object);
+                    }
+                });
 
+                FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.container_upcomingMovies,fragment_upcoming).commit();
+
+
+
             }
 
             @Override
             public void onFailure(Call<DifferentMovies> call, Throwable t) {
 
-                Toast.makeText(MainActivity2.this,"Could Not Show Upcoming Movies",Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),"Could Not Show Upcoming Movies",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_activity2, menu);
-        return true;
-    }
+    public void onClickItem(int position, Object object) {
+            Movie movie= (Movie)object;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+            Bundle bundle =new Bundle();
+            bundle.putString("poster",movie.getPoster_path());
+            bundle.putInt("movie_id",movie.getId());
+            bundle.putString("overView",movie.getOverview());
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            Fragment_Details fragment=new Fragment_Details();
+            fragment.setArguments(bundle);
+
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container_main,fragment).commit();
         }
 
-        return super.onOptionsItemSelected(item);
-    }
+    private void OnHeartClick(int position, Object object) {
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        userDAO.insertMovie((Movie)object);
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onClick(int position,Object object) {
-        Movie movie= (Movie)object;
-        Intent intent =new Intent(this, MovieDetail.class);
-        Bundle bundle =new Bundle();
-        bundle.putString("poster",movie.getPoster_path());
-        bundle.putInt("movie_id",movie.getId());
-        bundle.putString("overView",movie.getOverview());
-        intent.putExtras(bundle);
-        startActivity(intent);
     }
 }

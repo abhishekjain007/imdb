@@ -1,19 +1,16 @@
 package com.example.abhij.imdb;
 
-import android.content.ActivityNotFoundException;
+
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +25,6 @@ import com.example.abhij.imdb.MovieClasses.DifferentMovies;
 import com.example.abhij.imdb.MovieClasses.Movie;
 import com.example.abhij.imdb.MovieClasses.Trailer;
 import com.example.abhij.imdb.MovieClasses.TrailerFormat;
-import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,9 +33,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.provider.MediaStore.Video.Thumbnails.VIDEO_ID;
 
-public class MovieDetail extends AppCompatActivity implements CircleList_Fragment.OnClickListener ,LargeList_Fragment.OnClickListener,SmallList_Fragment.OnClickListener {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class Fragment_Details extends Fragment   {
+
+    public Fragment_Details() {
+    }
+
 
     ImageView poster ;
     MyApi myApi;
@@ -54,12 +56,12 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
 
     TextView text_overView;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view= inflater.inflate(R.layout.fragment_fragment__details, container, false);
 
 
 
@@ -73,10 +75,10 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
         trailer_fragment = new LargeList_Fragment();
         similarMovie_fragment = new SmallList_Fragment();
 
-        poster = (ImageView)findViewById(R.id.image_poster_InDisplay);
-        text_overView = (TextView) findViewById(R.id.text_discription);
+        poster = (ImageView)view.findViewById(R.id.image_poster_InDisplay);
+        text_overView = (TextView)view. findViewById(R.id.text_discription);
 
-        Bundle bundle = getIntent().getExtras();
+        Bundle bundle = getArguments();
 
         int movie_id = bundle.getInt("movie_id",-1);
         String overView = bundle.getString("overView","");
@@ -89,16 +91,8 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
         fetchCast(movie_id);
         fetchSimilarMovies(movie_id);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        return view;
     }
-
 
     private void fetchTrailers(int movie_id) {
 
@@ -111,14 +105,16 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
                     TrailerFormat trailerFormat = response.body();
 
                     trailerArrayList.clear();
-                    trailerArrayList.addAll(trailerFormat.results);
+                    if(trailerFormat.results!=null) {
+                        trailerArrayList.addAll(trailerFormat.results);
 
-                    for(int i=0;i<trailerArrayList.size();) {
-                        Trailer trailer = trailerArrayList.get(i);
-                        if (trailer.getType().equals("Trailer") && (trailer.getSize() == 1080 || trailer.getSize() == 720)) {
-                            i++;
-                        } else {
-                            trailerArrayList.remove(i);
+                        for (int i = 0; i < trailerArrayList.size(); ) {
+                            Trailer trailer = trailerArrayList.get(i);
+                            if (trailer.getType().equals("Trailer") && (trailer.getSize() == 1080 || trailer.getSize() == 720)) {
+                                i++;
+                            } else {
+                                trailerArrayList.remove(i);
+                            }
                         }
                     }
                     if(trailerArrayList.size()!=0) {
@@ -127,16 +123,28 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
                         bundle.putString("code", "trailer");
                         trailer_fragment.setArguments(bundle);
 
-                        FragmentManager manager = getSupportFragmentManager();
+                        trailer_fragment.setUpListener(new LargeList_Fragment.OnClickListener() {
+                            @Override
+                            public void onClick(int position, Object object) {
+                                Trailer trailer = (Trailer)object;
+                                Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + trailer.getKey() + "&feature=youtu.be"));
+
+                                startActivity(appIntent);
+
+                            }
+                        });
+
+                        FragmentManager manager = getActivity().getSupportFragmentManager();
                         FragmentTransaction transaction = manager.beginTransaction();
-                        transaction.replace(R.id.container_trailer, trailer_fragment).commit();
+                        transaction.addToBackStack("trailer").replace(R.id.container_trailer, trailer_fragment).commit();
+
                     }
                 }
 
                 @Override
                 public void onFailure(Call<TrailerFormat> call, Throwable t) {
 
-                    Toast.makeText(MovieDetail.this,"Could not load trailers",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Could not load trailers",Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -156,7 +164,7 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
 
 
                     castArrayList.clear();
-                    castArrayList .addAll(castFormat.cast);
+                    castArrayList.addAll(castFormat.cast);
 
                     for(int i=0;i<castArrayList.size();)
                     {
@@ -171,7 +179,14 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
                     bundle.putString("code","cast");
                     cast_fragment.setArguments(bundle);
 
-                    FragmentManager manager = getSupportFragmentManager();
+                    cast_fragment.setUpListener(new CircleList_Fragment.OnClickListener() {
+                        @Override
+                        public void OnClick(int position) {
+
+                        }
+                    });
+
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
                     FragmentTransaction transaction= manager.beginTransaction();
 
                     transaction.replace(R.id.container_cast,cast_fragment).commit();
@@ -179,7 +194,7 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
 
                 @Override
                 public void onFailure(Call<CastFormat> call, Throwable t) {
-                    Toast.makeText(MovieDetail.this,"Could not fetch cast ",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Could not fetch cast ",Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -207,7 +222,15 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
                     bundle.putString("code","movie");
                     similarMovie_fragment.setArguments(bundle);
 
-                    FragmentManager manager = getSupportFragmentManager();
+                    similarMovie_fragment.setUpListener(new SmallList_Fragment.OnClickListener() {
+                        @Override
+                        public void onClick(int position, Object object) {
+                            onClickItem(position,object);
+
+                        }
+                    });
+
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
                     FragmentTransaction transaction = manager.beginTransaction();
                     transaction.replace(R.id.container_similarMovies,similarMovie_fragment).commit();
 
@@ -215,30 +238,26 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
 
                 @Override
                 public void onFailure(Call<DifferentMovies> call, Throwable t) {
-                    Toast.makeText(MovieDetail.this,"Could not fetch cast ",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Could not fetch cast ",Toast.LENGTH_SHORT).show();
 
                 }
             });
         }
-
-
-
-
-
-    }
-    @Override
-    public void OnClick(int position) {
-
     }
 
-    @Override
-    public void onClick(int position, Object object) {
+    public void onClickItem(int position, Object object) {
+        Movie movie= (Movie)object;
 
+        Bundle bundle =new Bundle();
+        bundle.putString("poster",movie.getPoster_path());
+        bundle.putInt("movie_id",movie.getId());
+        bundle.putString("overView",movie.getOverview());
 
-        Trailer trailer = (Trailer)object;
-         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + trailer.getKey() + "&feature=youtu.be"));
-            
-            startActivity(appIntent);
-        }
+        Fragment_Details fragment=new Fragment_Details();
+        fragment.setArguments(bundle);
 
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container_main,fragment).commit();
+    }
 }

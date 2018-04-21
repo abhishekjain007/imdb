@@ -27,7 +27,7 @@ public class CircleList_Fragment extends Fragment {
         public void OnClick(int position);
     }
 
-    private OnClickListener listener;
+     CircleList_Fragment.OnClickListener listener;
 
     ArrayList<Cast> castArrayList;
     UserRecyclerAdapter_circle adapter ;
@@ -56,10 +56,9 @@ public class CircleList_Fragment extends Fragment {
                 }
             });
         }
+
         recyclerView_list = view.findViewById(R.id.recyclerList_Circle);
-
         recyclerView_list.setAdapter(adapter);
-
         recyclerView_list.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
 //        recyclerView_list.addItemDecoration(new DividerItemDecoration());
         recyclerView_list.setItemAnimator(new DefaultItemAnimator());
@@ -68,11 +67,8 @@ public class CircleList_Fragment extends Fragment {
      return  view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        listener = (CircleList_Fragment.OnClickListener)context;
+  public void setUpListener(CircleList_Fragment.OnClickListener listener){
+        this.listener = listener;
 
     }
 }

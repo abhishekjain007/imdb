@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.abhij.imdb.MovieClasses.Movie;
 import com.example.abhij.imdb.MovieClasses.Trailer;
 import com.example.abhij.imdb.R;
+import com.example.abhij.imdb.ShowsClasses.Show;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,18 +27,36 @@ public class UserRecyclerAdapter_Small extends RecyclerView.Adapter<UserRecycler
         public void OnClick(int position,Object Object);
     }
 
+    public interface OnHeartClicked{
+        public void onHeartClick(int position,Object object);
+    }
+
+
     ArrayList<Movie> movieArrayList ;
-//    ArrayList<Trailer> TrailerArrayList;
+    ArrayList<Show> showArrayList;
+
+    OnHeartClicked heartListener;
 
     Context context;
     OnItemClicked listener;
     String code;
 
-    public UserRecyclerAdapter_Small(Context context, ArrayList<Movie> movieArrayList,String code, OnItemClicked listener) {
+    public UserRecyclerAdapter_Small(Context context, ArrayList<Movie> movieArrayList,String code, OnItemClicked listener,UserRecyclerAdapter_Small.OnHeartClicked heartListener) {
         this.context = context;
         this.movieArrayList = movieArrayList;
         this.listener = listener;
         this.code= code;
+        this.heartListener = heartListener;
+    }
+
+
+    public UserRecyclerAdapter_Small(String code, ArrayList<Show> showArrayList, Context context, UserRecyclerAdapter_Small.OnItemClicked listener,UserRecyclerAdapter_Small.OnHeartClicked heartListener)
+    {
+        this.showArrayList = showArrayList;
+        this.context = context;
+        this.listener= listener;
+        this.code= code;
+        this.heartListener = heartListener;
     }
 //
 //    public UserRecyclerAdapter_Small( ArrayList<Movie> movies,Context context,String code, OnItemClicked listener) {
@@ -72,8 +91,33 @@ public class UserRecyclerAdapter_Small extends RecyclerView.Adapter<UserRecycler
                     listener.OnClick(holder.getAdapterPosition(), movieArrayList.get(holder.getAdapterPosition()));
                 }
             });
+            holder.heart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    heartListener.onHeartClick(holder.getAdapterPosition(), movieArrayList.get(holder.getAdapterPosition()));
+                }
+            });
         }
 
+        if(code.equals("show"))
+        {
+            String url = "http://image.tmdb.org/t/p/w342/" + showArrayList.get(position).getPoster_path();
+            Picasso.get().load(url).into(holder.poster);
+            holder.title.setText(showArrayList.get(position).getOriginal_name());
+            holder.occupied = true;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.OnClick(holder.getAdapterPosition(), showArrayList.get(holder.getAdapterPosition()));
+                }
+            });
+            holder.heart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    heartListener.onHeartClick(holder.getAdapterPosition(), showArrayList.get(holder.getAdapterPosition()));
+                }
+            });
+        }
 //        if (code.equals("movie")) {
 //            String url = "http://image.tmdb.org/t/p/w342/" + movies.get(position).getPoster_path();
 //            Picasso.get().load(url).into(holder.poster);
@@ -94,6 +138,9 @@ public class UserRecyclerAdapter_Small extends RecyclerView.Adapter<UserRecycler
         if(code.equals("movie"))
         return movieArrayList.size();
 
+        if(code.equals("show"))
+            return showArrayList.size();
+
 //        if(code.equals(""))
 
         return -1;
@@ -102,6 +149,8 @@ public class UserRecyclerAdapter_Small extends RecyclerView.Adapter<UserRecycler
     class UserHolder extends RecyclerView.ViewHolder {
 
         ImageView poster;
+
+        ImageView heart;
         TextView title;
         View itemView;
         Boolean occupied;
@@ -112,6 +161,8 @@ public class UserRecyclerAdapter_Small extends RecyclerView.Adapter<UserRecycler
             this.itemView = itemView;
             poster = itemView.findViewById(R.id.poster_SmallItem);
             title= itemView.findViewById(R.id.title_SmallItem);
+            heart= itemView.findViewById(R.id.heart_smallItem);
+
         }
     }
 }

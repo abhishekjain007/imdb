@@ -11,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.abhij.imdb.Adapters.UserRecyclerAdapter_Large;
 import com.example.abhij.imdb.MovieClasses.Movie;
 import com.example.abhij.imdb.R;
 import com.example.abhij.imdb.Adapters.UserRecyclerAdapter_Small;
+import com.example.abhij.imdb.ShowsClasses.Show;
 
 import java.util.ArrayList;
 
@@ -27,10 +29,15 @@ public class SmallList_Fragment extends Fragment {
         public void onClick(int position,Object object);
     }
 
-    SmallList_Fragment.OnClickListener listener;
+    public interface OnHeartClicked{
+        public void onHeartClick(int position,Object object);
+    }
 
+    SmallList_Fragment.OnClickListener listener;
+    OnHeartClicked heartListener;
 
     ArrayList<Movie> movieArrayList;
+    ArrayList<Show> showArrayList;
 
     RecyclerView recyclerView_list;
     UserRecyclerAdapter_Small adapter ;
@@ -61,8 +68,30 @@ public class SmallList_Fragment extends Fragment {
                     listener.onClick(position, object);
 
                 }
+            }, new UserRecyclerAdapter_Small.OnHeartClicked() {
+                @Override
+                public void onHeartClick(int position, Object object) {
+                    heartListener.onHeartClick(position,object);
+                }
             });
         }
+        if(code.equals("show"))
+        {
+            showArrayList =(ArrayList<Show>) bundle.getSerializable("showsList");
+            adapter = new UserRecyclerAdapter_Small("show",showArrayList,getActivity(),new UserRecyclerAdapter_Small.OnItemClicked(){
+                @Override
+                public void OnClick(int position,Object object) {
+
+                    listener.onClick(position,object);
+                }
+            }, new UserRecyclerAdapter_Small.OnHeartClicked() {
+                @Override
+                public void onHeartClick(int position, Object object) {
+                    heartListener.onHeartClick(position,object);
+                }
+            });
+        }
+
 
         recyclerView_list = (RecyclerView) view.findViewById(R.id.recyclerList_Movies_In_Small);
 
@@ -73,10 +102,28 @@ public class SmallList_Fragment extends Fragment {
 
         return view;
     }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//
+//        listener = (SmallList_Fragment.OnClickListener)context;
+//    }
 
-        listener = (SmallList_Fragment.OnClickListener)context;
+    public void setUpListener(SmallList_Fragment.OnClickListener listener)
+    {
+        this.listener = listener;
     }
+
+    public void setUpListener(SmallList_Fragment.OnClickListener listener,SmallList_Fragment.OnHeartClicked heartListener)
+    {
+        this.listener= listener;
+        this.heartListener =heartListener;
+    }
+//    @Override
+//    public void onAttachFragment(Fragment childFragment) {
+//        super.onAttachFragment(childFragment);
+//
+//        listener = (SmallList_Fragment.OnClickListener)childFragment;
+//
+//    }
 }

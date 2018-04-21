@@ -15,6 +15,7 @@ import com.example.abhij.imdb.MovieClasses.Movie;
 import com.example.abhij.imdb.MovieClasses.Trailer;
 import com.example.abhij.imdb.R;
 import com.example.abhij.imdb.Adapters.UserRecyclerAdapter_Large;
+import com.example.abhij.imdb.ShowsClasses.Show;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,12 @@ public class LargeList_Fragment extends Fragment {
 
         public void onClick(int position,Object object);
     }
+    public interface OnHeartClicked{
+        public void onHeartClick(int position,Object object);
+    }
+
+    OnHeartClicked heartListener;
+
 
     OnClickListener listener;
 
@@ -36,6 +43,7 @@ public class LargeList_Fragment extends Fragment {
     UserRecyclerAdapter_Large adapter ;
     ArrayList<Movie> movieArrayList;
     ArrayList<Trailer> trailerArrayList;
+    ArrayList<Show> showArrayList;
     String code;
 
     public LargeList_Fragment() {
@@ -52,8 +60,6 @@ public class LargeList_Fragment extends Fragment {
 
         View view =  inflater.inflate(R.layout.fragment_broad_list_, container, false);
 
-
-
         Bundle bundle = getArguments();
 
         code= bundle.getString("code");
@@ -67,6 +73,11 @@ public class LargeList_Fragment extends Fragment {
                 public void onClick(int position,Object object) {
 
                     listener.onClick(position,object);
+                }
+            }, new UserRecyclerAdapter_Large.OnHeartClicked() {
+                @Override
+                public void onHeartClick(int position, Object object) {
+                    heartListener.onHeartClick(position,object);
                 }
             });
 
@@ -85,6 +96,22 @@ public class LargeList_Fragment extends Fragment {
             });
 
         }
+        if(code.equals("show"))
+        {
+            showArrayList =(ArrayList<Show>) bundle.getSerializable("showsList");
+            adapter = new UserRecyclerAdapter_Large("show",showArrayList,getActivity(),new UserRecyclerAdapter_Large.OnItemClicked(){
+                @Override
+                public void onClick(int position,Object object) {
+
+                    listener.onClick(position,object);
+                }
+            }, new UserRecyclerAdapter_Large.OnHeartClicked() {
+                @Override
+                public void onHeartClick(int position, Object object) {
+                    heartListener.onHeartClick(position,object);
+                }
+            });
+        }
 
         recyclerView_list = (RecyclerView)view.findViewById(R.id.recyclerList_In_Large);
 
@@ -98,10 +125,22 @@ public class LargeList_Fragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+//
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//
+//        listener = (OnClickListener)context;
+//    }
 
-        listener = (OnClickListener)context;
+
+    public void setUpListener(LargeList_Fragment.OnClickListener mlistener){
+        this.listener = mlistener;
+    }
+
+    public void setUpListener(LargeList_Fragment.OnClickListener mlistener,LargeList_Fragment.OnHeartClicked heartListener )
+    {
+        this.listener=mlistener;
+        this.heartListener = heartListener;
     }
 }
