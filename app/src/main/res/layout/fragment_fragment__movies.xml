@@ -1,0 +1,134 @@
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+app:layout_behavior="@string/appbar_scrolling_view_behavior"
+app:layout_scrollFlags="scroll"
+tools:context="com.example.abhij.imdb.Fragment_Movies"
+tools:showIn="@layout/activity_main">
+
+
+<!--<android.support.v4.widget.SwipeRefreshLayout-->
+<!--android:id="@+id/swipe"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:visibility="visible" />-->
+
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+
+        android:id="@+id/container_popularMovies"
+        android:layout_width="match_parent"
+        android:layout_height="228dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="2dp"
+
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_popular">
+
+    </FrameLayout>
+
+    <TextView
+
+        android:id="@+id/text_popular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        android:text="Popular"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="28dp" />
+
+
+    <TextView
+        android:id="@+id/text_topRated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
+        android:text="Top Rated"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_popularMovies"
+        android:layout_marginLeft="28dp" />
+
+    <FrameLayout
+        android:id="@+id/container_topRatedMovies"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_topRated">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_nowPlaying"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
+        android:text="Now Playing"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_topRatedMovies"
+        android:layout_marginLeft="28dp" />
+
+    <FrameLayout
+        android:id="@+id/container_nowPlayingMovies"
+        android:layout_width="match_parent"
+        android:layout_height="228dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_nowPlaying">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_upcoming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
+        android:text="Upcoming"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_nowPlayingMovies"
+        android:layout_marginLeft="28dp" />
+
+    <FrameLayout
+        android:id="@+id/container_upcomingMovies"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_upcoming">
+
+    </FrameLayout>
+
+</android.support.constraint.ConstraintLayout>
+</ScrollView>
