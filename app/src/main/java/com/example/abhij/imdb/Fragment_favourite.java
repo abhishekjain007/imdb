@@ -43,6 +43,8 @@ public class Fragment_favourite extends Fragment {
     UserRecyclerAdapter_Large adapter1 ;
 
 
+    String code;
+
     public Fragment_favourite() {
         // Required empty public constructor
 
@@ -72,7 +74,7 @@ public class Fragment_favourite extends Fragment {
         adapter= new UserRecyclerAdapter_Large("showFav", showArrayList, getActivity(), new UserRecyclerAdapter_Large.OnItemClicked() {
             @Override
             public void onClick(int position, Object object) {
-                onClickItem(position,object);
+                onClickItem(position,object,"show");
             }
         }, new UserRecyclerAdapter_Large.OnHeartClicked() {
             @Override
@@ -87,7 +89,7 @@ public class Fragment_favourite extends Fragment {
         adapter1 =new UserRecyclerAdapter_Large(getActivity(), movieArrayList, "movieFav", new UserRecyclerAdapter_Large.OnItemClicked() {
             @Override
             public void onClick(int position, Object object) {
-                onClickItem(position,object);
+                onClickItem(position,object,"movie");
             }
         }, new UserRecyclerAdapter_Large.OnHeartClicked() {
             @Override
@@ -98,12 +100,12 @@ public class Fragment_favourite extends Fragment {
             }
         });
 
-        recyclerView_list = (RecyclerView)view.findViewById(R.id.recycler_favouriteShows);
+        recyclerView_list = view.findViewById(R.id.recycler_favouriteShows);
         recyclerView_list.setItemAnimator(new DefaultItemAnimator());
         recyclerView_list.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
         recyclerView_list.setAdapter(adapter);
 
-        recyclerView_list1 = (RecyclerView)view.findViewById(R.id.recycler_favouriteMovies);
+        recyclerView_list1 = view.findViewById(R.id.recycler_favouriteMovies);
         recyclerView_list1.setItemAnimator(new DefaultItemAnimator());
         recyclerView_list1.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
         recyclerView_list1.setAdapter(adapter1);
@@ -112,15 +114,24 @@ public class Fragment_favourite extends Fragment {
 
         return view;
     }
-    public void onClickItem(int position, Object object) {
-        Movie movie= (Movie)object;
+    public void onClickItem(int position, Object object,String code) {
 
         Bundle bundle =new Bundle();
-        bundle.putString("poster",movie.getPoster_path());
-        bundle.putInt("movie_id",movie.getId());
-        bundle.putString("overView",movie.getOverview());
 
+        if(code.equals("movie")){
+            Movie movie = (Movie) object;
+            bundle.putString("poster", movie.getPoster_path());
+            bundle.putInt("id", movie.getId());
+            bundle.putString("overView", movie.getOverview());
+        }else if(code.equals("show"))
+        {
+            Show show= (Show)object;
+            bundle.putString("poster",show.getPoster_path());
+            bundle.putInt("id",show.getId());
+            bundle.putString("overView",show.getOverview());
+        }
 
+        bundle.putString("code",code);
         Fragment_Details fragment=new Fragment_Details();
         fragment.setArguments(bundle);
 
@@ -128,5 +139,5 @@ public class Fragment_favourite extends Fragment {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container_main,fragment).commit();
     }
-
+//C:\Users\abhij\.gradle\caches\transforms-1\files-1.1\appcompat-v7-25.3.0.aar\5ebca5e97f0c300ed8ecabeec46f90c8\res\values-v21\values-v21.xml
 }

@@ -22,7 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserRecyclerAdapter_circle extends RecyclerView.Adapter<UserRecyclerAdapter_circle.UserHolder> {
 
    public interface OnClickListener{
-       public void OnClick(int postion);
+       void OnClick(int postion);
    }
 
 

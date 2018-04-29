@@ -18,32 +18,33 @@ public interface UserApi {
 
 
     @GET("movie/popular?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<DifferentMovies> getPopularMovies();
+    Call<DifferentMovies> getPopularMovies();
 
     @GET("movie/latest?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<DifferentMovies> getLatestMovies();
+    Call<DifferentMovies> getLatestMovies();
 
     @GET("movie/now_playing?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<DifferentMovies> getNowPlayingMovies();
+    Call<DifferentMovies> getNowPlayingMovies();
 
     @GET("movie/top_rated?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<DifferentMovies> getTopRatedMovies();
+    Call<DifferentMovies> getTopRatedMovies();
 
     @GET("movie/upcoming?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<DifferentMovies> getUpcomingMovies();
+    Call<DifferentMovies> getUpcomingMovies();
 
-    @GET("movie/{movie_id}/credits?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<CastFormat> getCast(@Path("movie_id") int movie_id);
+    @GET("{type}/{id}/credits?api_key=815982ecec1c306def1a2852911c727c")
+    Call<CastFormat> getCast(@Path("type") String type, @Path("id") int id);
 
-    @GET("movie/{movie_id}/videos?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<TrailerFormat> getTrailers(@Path("movie_id") int movie_id);
+    @GET("{type}/{id}/videos?api_key=815982ecec1c306def1a2852911c727c")
+    Call<TrailerFormat> getTrailers(@Path("type") String type, @Path("id") int id);
 
-    @GET("movie/{movie_id}/similar?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<DifferentMovies> getSimilarMovies(@Path("movie_id") int movie_id);
+    @GET("movie/{id}/similar?api_key=815982ecec1c306def1a2852911c727c")
+    Call<DifferentMovies> getSimilarMovies(@Path("id") int id);
 
     @GET("tv/{tv_type}?api_key=815982ecec1c306def1a2852911c727c")
-    public Call<DifferentShows> getTv_shows(@Path("tv_type") String tv_type);//@Query("api_key") String query );
+    Call<DifferentShows> getTv_shows(@Path("tv_type") String tv_type);//@Query("api_key") String query );
 
-
+    @GET("tv/{tv_id}/similar?api_key=815982ecec1c306def1a2852911c727c")
+    Call<DifferentShows> getSimilarShows(@Path("tv_id") int tv_id);
 
 }

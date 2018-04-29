@@ -24,11 +24,11 @@ public class UserRecyclerAdapter_Small extends RecyclerView.Adapter<UserRecycler
 
     public interface OnItemClicked{
 
-        public void OnClick(int position,Object Object);
+        void OnClick(int position, Object Object);
     }
 
     public interface OnHeartClicked{
-        public void onHeartClick(int position,Object object);
+        void onHeartClick(int position, Object object);
     }
 
 

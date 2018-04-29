@@ -279,7 +279,8 @@ public class Fragment_Movies extends Fragment{
 
             Bundle bundle =new Bundle();
             bundle.putString("poster",movie.getPoster_path());
-            bundle.putInt("movie_id",movie.getId());
+            bundle.putInt("id",movie.getId());
+            bundle.putString("code","movie");
             bundle.putString("overView",movie.getOverview());
 
             Fragment_Details fragment=new Fragment_Details();

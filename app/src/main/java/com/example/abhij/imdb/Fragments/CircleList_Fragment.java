@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class CircleList_Fragment extends Fragment {
 
     public interface OnClickListener{
-        public void OnClick(int position);
+        void OnClick(int position);
     }
 
      CircleList_Fragment.OnClickListener listener;

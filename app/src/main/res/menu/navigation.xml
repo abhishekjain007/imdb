@@ -4,15 +4,19 @@
 
 
 
-    <item
-        android:id="@+id/navigation_TV_shows"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="TV shows" />
+
 
     <item
         android:id="@+id/navigation_Movies"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="Movies" />
+
+        android:title="Movies"
+
+        />
+    <item
+        android:id="@+id/navigation_TV_shows"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="TV shows" />
 
     <item
         android:id="@+id/navigation_Favourate"

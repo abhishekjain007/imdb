@@ -8,26 +8,36 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 public class MainActivity extends AppCompatActivity {
 
-//
-//    MenuInflater inflater = getMenuInflater();
-//    inflater.
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+    FragmentManager manager = getSupportFragmentManager();
+    EditText editText_search;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-            FragmentManager manager = getSupportFragmentManager();
 
             switch (item.getItemId()) {
                 case R.id.navigation_Movies:
+
+
+
 
                     Fragment_Movies fragment = new Fragment_Movies();
                     FragmentTransaction transaction = manager.beginTransaction();
@@ -51,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this,"fav",Toast.LENGTH_SHORT).show();
                     return true;
             }
-            return false;
+            return true;
         }
     };
 
@@ -62,6 +72,40 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+        editText_search= (EditText) findViewById(R.id.menuItem_search);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, null);
+
+        Fragment_Movies fragment = new Fragment_Movies();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container_main,fragment).commit();
+
+
+
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        editText_search.setVisibility(View.VISIBLE);
+
+        return super.onOptionsItemSelected(item);
+    }
 }

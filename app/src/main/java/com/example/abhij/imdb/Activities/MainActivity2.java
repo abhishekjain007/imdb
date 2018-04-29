@@ -41,6 +41,7 @@ public class MainActivity2 extends AppCompatActivity
         ,LargeList_Fragment.OnClickListener{
 
 
+
     ArrayList<Movie> movies_popular=new ArrayList<>();
     ArrayList<Movie> movies_topRated=new ArrayList<>();
     ArrayList<Movie> movies_nowPlaying=new ArrayList<>();
