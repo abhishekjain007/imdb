@@ -7,7 +7,7 @@ android:layout_height="match_parent"
 app:layout_behavior="@string/appbar_scrolling_view_behavior"
 app:layout_scrollFlags="scroll"
 tools:context="com.example.abhij.imdb.Fragment_Movies"
-tools:showIn="@layout/activity_,main">
+tools:showIn="@layout/activity_main">
 
 
 <!--<android.support.v4.widget.SwipeRefreshLayout-->
@@ -21,11 +21,13 @@ tools:showIn="@layout/activity_,main">
     android:layout_height="match_parent">
 
     <FrameLayout
+
         android:id="@+id/container_popularMovies"
         android:layout_width="match_parent"
         android:layout_height="228dp"
         android:layout_marginEnd="2dp"
         android:layout_marginStart="2dp"
+
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +36,7 @@ tools:showIn="@layout/activity_,main">
     </FrameLayout>
 
     <TextView
+
         android:id="@+id/text_popular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +46,8 @@ tools:showIn="@layout/activity_,main">
         android:textColor="@android:color/black"
         android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="28dp" />
 
 
     <TextView
@@ -56,7 +60,8 @@ tools:showIn="@layout/activity_,main">
         android:textColor="@android:color/black"
         android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_popularMovies" />
+        app:layout_constraintTop_toBottomOf="@+id/container_popularMovies"
+        android:layout_marginLeft="28dp" />
 
     <FrameLayout
         android:id="@+id/container_topRatedMovies"
@@ -81,7 +86,8 @@ tools:showIn="@layout/activity_,main">
         android:textColor="@android:color/black"
         android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_topRatedMovies" />
+        app:layout_constraintTop_toBottomOf="@+id/container_topRatedMovies"
+        android:layout_marginLeft="28dp" />
 
     <FrameLayout
         android:id="@+id/container_nowPlayingMovies"

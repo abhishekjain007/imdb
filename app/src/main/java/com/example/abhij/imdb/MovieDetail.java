@@ -104,7 +104,7 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
 
         if(movie_id!=-1)
         {
-            Call<TrailerFormat> call = userApi.getTrailers(movie_id);
+            Call<TrailerFormat> call = userApi.getTrailers("movie",movie_id);
             call.enqueue(new Callback<TrailerFormat>() {
                 @Override
                 public void onResponse(Call<TrailerFormat> call, Response<TrailerFormat> response) {
@@ -148,7 +148,7 @@ public class MovieDetail extends AppCompatActivity implements CircleList_Fragmen
 
         if(movie_id!=-1){
 
-            Call<CastFormat> call =userApi.getCast(movie_id);
+            Call<CastFormat> call =userApi.getCast("movie",movie_id);
             call.enqueue(new Callback<CastFormat>() {
                 @Override
                 public void onResponse(Call<CastFormat> call, Response<CastFormat> response) {

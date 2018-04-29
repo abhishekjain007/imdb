@@ -4,6 +4,7 @@ package com.example.abhij.imdb.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,11 +32,11 @@ import static android.support.v4.content.ContextCompat.startActivity;
 public class UserRecyclerAdapter_Large extends RecyclerView.Adapter<UserRecyclerAdapter_Large.UserHolder> {
 
     public interface OnItemClicked{
-        public void onClick(int position,Object object);
+        void onClick(int position, Object object);
     }
 
     public interface OnHeartClicked{
-        public void onHeartClick(int position,Object object);
+        void onHeartClick(int position, Object object);
     }
 
     ArrayList<Movie> movieArrayList ;
@@ -117,8 +118,12 @@ public class UserRecyclerAdapter_Large extends RecyclerView.Adapter<UserRecycler
 
 
         if(code.equals("trailer")) {
-                String url = "https://img.youtube.com/vi/"+trailerArrayList.get(position).getKey()+"/mqdefault.jpg" ;
+                String url = "https://img.youtube.com/vi/"+trailerArrayList.get(position).getKey()+"/maxresdefault.jpg" ;
+//                holder.poster.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150));
                 Picasso.get().load(url).into(holder.poster);
+//                holder.itemView.findViewById(R.id.cardItem_large).setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+//                holder.itemView.findViewById(R.id.cardItem_large).setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 holder.title.setVisibility(View.INVISIBLE);
 //                holder.title.setText(TrailerArrayList.get(position).getName());

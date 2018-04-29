@@ -27,10 +27,10 @@ public class LargeList_Fragment extends Fragment {
 
     public interface OnClickListener{
 
-        public void onClick(int position,Object object);
+        void onClick(int position, Object object);
     }
     public interface OnHeartClicked{
-        public void onHeartClick(int position,Object object);
+        void onHeartClick(int position, Object object);
     }
 
     OnHeartClicked heartListener;
@@ -113,7 +113,7 @@ public class LargeList_Fragment extends Fragment {
             });
         }
 
-        recyclerView_list = (RecyclerView)view.findViewById(R.id.recyclerList_In_Large);
+        recyclerView_list = view.findViewById(R.id.recyclerList_In_Large);
 
 
 
